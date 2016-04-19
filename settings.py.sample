@@ -1,0 +1,20 @@
+# -*- coding: utf-8 -*-
+
+# telegram bot token
+BOT_TOKEN = 'token'
+
+# telegram bot name
+BOT_NAME = 'mybot'
+
+# users allowed to send bot commands
+ALLOWED_USERS = ['someuser']
+
+# available ipcams
+CAMS = {
+    'cam1': {
+        'user': 'admin',
+        'password': 'admin',
+        'ip': '192.168.0.1',
+        'path': '/path/to/file.jpg',
+    },
+}
