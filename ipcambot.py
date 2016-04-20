@@ -32,16 +32,6 @@ def is_allowed(f):
     return wrapped
 
 
-@bot.message_handler(commands=['start'])
-@is_allowed
-def send_welcome(message):
-    """Send welcome message"""
-
-    bot.send_message(message.chat.id,
-                     ('Olá eu sou {}!\n' +
-                      'Seu assistente de monitoramento.').format(BOT_NAME))
-
-
 @bot.message_handler(commands=['help'])
 @is_allowed
 def send_help(message):
@@ -53,6 +43,24 @@ def send_help(message):
             '/cam - Snapshot das câmeras')
 
     bot.send_message(message.chat.id, help)
+
+
+@bot.message_handler(commands=['start'])
+@is_allowed
+def send_welcome(message):
+    """Send welcome message"""
+
+    bot.send_message(message.chat.id,
+                     ('Olá eu sou {}!\n' +
+                      'Seu assistente de monitoramento.').format(BOT_NAME))
+
+
+@bot.message_handler(commands=['ping'])
+@is_allowed
+def ping(message):
+    """Checks for bot  response"""
+
+    bot.send_message(message.chat.id, 'pong')
 
 
 @bot.message_handler(commands=['cam'])
