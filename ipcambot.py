@@ -40,6 +40,7 @@ def send_help(message):
     help = ('Comandos:\n' +
             '/help  - Esta mensagem de ajuda\n' +
             '/start - Mensagem de boas vindas\n' +
+            '/ping - Verifica se estou online\n' +
             '/cam - Snapshot das câmeras')
 
     bot.send_message(message.chat.id, help)
@@ -64,24 +65,26 @@ def ping(message):
 
 
 @bot.message_handler(commands=['cam'])
+@is_allowed
 def cam_keyboard(message):
     """Start cam selection keyboard"""
 
     keyboard = types.ReplyKeyboardMarkup(one_time_keyboard=True, row_width=1)
-    keys = [types.KeyboardButton(k) for k in CAMS]
+    keys = [types.KeyboardButton(k.upper()) for k in CAMS]
 
     keyboard.add(*keys)
 
     msg = bot.reply_to(message, 'Escolha uma câmera:', reply_markup=keyboard)
-    bot.register_next_step_handler(msg, get_cam)
 
 
+@bot.message_handler(func=lambda m: True if CAMS.get(m.text.lower()) else False)
+@is_allowed
 def get_cam(message):
     """Get cam snapshot"""
 
-    cam = CAMS.get(message.text)
+    cam = CAMS.get(message.text.lower())
 
-    if cam:
+    try:
         url = 'http://{user}:{password}@{ip}{path}'.format(**cam)
 
         response = requests.get(url)
@@ -98,8 +101,11 @@ def get_cam(message):
         bot.send_photo(message.chat.id, file)
 
         file.close()
-    else:
-        bot.reply_to(message, 'Câmera inexistente')
+    except requests.ConnectionError:
+        bot.reply_to(message, 'Câmera Offline')
+    except KeyError:
+        bot.reply_to(message, 'Erro de configuração na câmera "{}"'.format(
+            message.text.upper()))
 
 
 bot.polling()
