@@ -87,7 +87,7 @@ def get_cam(message):
     try:
         url = 'http://{user}:{password}@{ip}{path}'.format(**cam)
 
-        response = requests.get(url)
+        response = requests.get(url, stream=True)
 
         # start chat photo upload
         bot.send_chat_action(message.chat.id, 'upload_photo')
