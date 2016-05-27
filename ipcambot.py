@@ -13,10 +13,8 @@ CAMS = {}
 
 ROOTDIR = os.path.abspath(os.path.dirname(__file__))
 
-try:
-    execfile(os.path.join(ROOTDIR, 'settings.py'))
-except IOError:
-    raise Exception('Missing settings.py file with bot configs')
+with open(os.path.join(ROOTDIR, 'settings.py')) as settings:
+    exec(settings.read())
 
 bot = TeleBot(BOT_TOKEN)
 
